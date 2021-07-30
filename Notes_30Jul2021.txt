@@ -1,50 +1,71 @@
-	@PostMapping("/schedule")
-	public int addSchedule(@RequestBody Schedule schedule)
-	{
-		schedule.setId(generateScheduleId());
-		return cs.create(schedule);
-	}
+Ticket
+Schedule
+
+Flight
+	id
+	name
+	capacity
+Route
+	id
+	source
+	destination
+	duration	in minutes		when you display you can display in h m
+Schedule
+	id
+	route_id
+	flight_id
+	sdate
+	stime
 	
-	@GetMapping("/schedule")
-	public List<Schedule> getAllSchedules()
-	{
-		return cs.read();
-	}
-	
-	@GetMapping("/schedule/{id}")
-	public Schedule findScheduleById(@PathVariable Long id)
-	{
-		return cs.read(id);
-	}
-	
-	@GetMapping("/schedule/customer/{id}")
-	public List<Schedule> findSchedulesByCustomer(@PathVariable Long id)
-	{
-		return cs.findSchedulesByCustomer(id);
-	}
-	
-	private Long generateScheduleId()
-	{
-		List<Schedule> schedules = getAllSchedules();
-		Collections.sort(schedules,(a,b)->a.getId().compareTo(b.getId()));
-		if(schedules.size()==0)
-			return 1L;
-		Schedule lastSchedule = schedules.get(schedules.size());
-		Long id=0L;
-		if(lastSchedule!=null)
-			id=lastSchedule.getId();
-		id++;
-		return id;
-	}
-	
-	@PutMapping("/schedule")
-	public int modifySchedule(@RequestBody Schedule schedule)
-	{
-		return cs.update(schedule);
-	}
-	
-	@DeleteMapping("/schedule/{id}")
-	public int removeSchedule(@PathVariable Long id)
-	{
-		return cs.delete(id);
-	}
+Passenger
+	id
+	firstName
+	lastName
+Ticket
+	id
+	schedule_id
+	cost
+	status
+
+
+CREATE TABLE FLIGHT
+(
+	id bigint primary key,
+    name varchar(100),
+    capacity int
+);
+
+create table ROUTE
+(
+	id bigint primary key,
+    source varchar(100),
+    destination varchar(100),
+    duration int
+);
+
+create table SCHEDULE
+(
+	id bigint primary key,
+    route_id bigint,
+    flight_id bigint,
+    sdate date,
+    stime time
+);
+
+create table PASSENGER
+(
+	id bigint primary key,
+    firstName varchar(100),
+    lastName varchar(100)
+);
+
+create table TICKET
+(
+	id bigint primary key,
+    schedule_id bigint,
+    cost double,
+    status varchar(100)
+);
+
+
+insert into schedule values (1, 3, 1, '2021-07-31', '06:00');
