@@ -1,0 +1,50 @@
+	@PostMapping("/schedule")
+	public int addSchedule(@RequestBody Schedule schedule)
+	{
+		schedule.setId(generateScheduleId());
+		return cs.create(schedule);
+	}
+	
+	@GetMapping("/schedule")
+	public List<Schedule> getAllSchedules()
+	{
+		return cs.read();
+	}
+	
+	@GetMapping("/schedule/{id}")
+	public Schedule findScheduleById(@PathVariable Long id)
+	{
+		return cs.read(id);
+	}
+	
+	@GetMapping("/schedule/customer/{id}")
+	public List<Schedule> findSchedulesByCustomer(@PathVariable Long id)
+	{
+		return cs.findSchedulesByCustomer(id);
+	}
+	
+	private Long generateScheduleId()
+	{
+		List<Schedule> schedules = getAllSchedules();
+		Collections.sort(schedules,(a,b)->a.getId().compareTo(b.getId()));
+		if(schedules.size()==0)
+			return 1L;
+		Schedule lastSchedule = schedules.get(schedules.size());
+		Long id=0L;
+		if(lastSchedule!=null)
+			id=lastSchedule.getId();
+		id++;
+		return id;
+	}
+	
+	@PutMapping("/schedule")
+	public int modifySchedule(@RequestBody Schedule schedule)
+	{
+		return cs.update(schedule);
+	}
+	
+	@DeleteMapping("/schedule/{id}")
+	public int removeSchedule(@PathVariable Long id)
+	{
+		return cs.delete(id);
+	}
